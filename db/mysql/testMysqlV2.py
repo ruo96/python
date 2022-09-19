@@ -4,36 +4,45 @@
 
 # 已经封装好mysql类了，就不用导入pymsql了，直接导入封装好的类
 
-from dbutil import Mysqldb
+from dbutil_v2 import Database
+# 导包
+from dbutil_v2 import Database
 
-# 实例化
-my_db = Mysqldb()
+# 设置连接数据库的参数
+config = {
+    "host":"172.20.8.110",
+    "port":31002,
+    "database":"fedx",
+    "charset":"utf8",
+    "user":"root",
+    "passwd":"Wa@123456"
+}
 
-# 写查询SQL语句
-sql = "select * from user"
-# 查询所有
-select_all = my_db.select_all(sql)
-print("查询所有数据：\n", select_all)
-# 查询一条
-select_one = my_db.select_one(sql)
-print("查询一条数据：\n", select_one)
+# 实例化时就直接传参数
+db = Database(**config)
+
+# 查询1条
+select_one = db.select_one("user")
+print(select_one)
+
 # 查询多条
-select_many = my_db.select_many(sql, 3)
-print("查询3条数据：\n", select_many)
+select_many = db.select_many(3, "user")
+print(select_many)
+
+# 查询所有数据(根据条件)
+select_all = db.select_all("user", "id>10")
+print(select_all)
 
 # 新增一条数据
-value = (16, 'BBQ')
-sql = f"insert into user values {value}"
-insert_one = my_db.commit_data(sql)
+db.insert("user","(20,'111')")
 # 新增多条数据
-values = "(17, 'aaa'), (18, 'bbb'), (19, 'ccc')"
-sql = f"insert into user values {values}"
-insert_many = my_db.commit_data(sql)
+db.insert("user", "(21,'123'),(22,'456')")
 
-# 修改数据
-sql = "update user set name = '出不去了' where id = 1700"
-my_db.commit_data(sql)
+# 修改一个字段的数据
+db.update("user", {"name": "222"}, "id=20")
+# 修改多个字段的数据
+db.update("user", {"id": "23", "name": "12345"}, "id=103")
 
 # 删除数据
-sql = "delete from user where id = 1700"
-my_db.commit_data(sql)
+db.delete("user", "id=23")
+

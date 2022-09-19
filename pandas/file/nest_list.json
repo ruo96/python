@@ -1,20 +1,26 @@
-[
-   {
-   "id": "A001",
-   "name": "菜鸟教程",
-   "url": "www.runoob.com",
-   "likes": 61
-   },
-   {
-   "id": "A002",
-   "name": "Google",
-   "url": "www.google.com",
-   "likes": 124
-   },
-   {
-   "id": "A003",
-   "name": "淘宝",
-   "url": "www.taobao.com",
-   "likes": 45
-   }
-]
+{
+    "school_name": "ABC primary school",
+    "class": "Year 1",
+    "students": [
+    {
+        "id": "A001",
+        "name": "Tom",
+        "math": 60,
+        "physics": 66,
+        "chemistry": 61
+    },
+    {
+        "id": "A002",
+        "name": "James",
+        "math": 89,
+        "physics": 76,
+        "chemistry": 51
+    },
+    {
+        "id": "A003",
+        "name": "Jenny",
+        "math": 79,
+        "physics": 90,
+        "chemistry": 78
+    }]
+}

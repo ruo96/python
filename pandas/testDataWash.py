@@ -1,80 +1,46 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
-import json
-from glom import glom
+
+print("包含了四种空数据：    n/a   NA    —    na")
 
 
+print("============================================")
+print('''
+#如果我们要删除包含空字段的行，可以使用 dropna() 方法，语法格式如下：
+#DataFrame.dropna(axis=0, how='any', thresh=None, subset=None, inplace=False)
+参数说明：
 
-df = pd.read_json('file\\site.json')
+    axis：默认为 0，表示逢空值剔除整行，如果设置参数 axis＝1 表示逢空值去掉整列。
+    how：默认为 'any' 如果一行（或一列）里任何一个数据有出现 NA 就去掉整行，如果设置 how='all' 一行（或列）都是 NA 才去掉这整行。
+    thresh：设置需要多少非空值的数据才可以保留下来的。
+    subset：设置想要检查的列。如果是多个列，可以使用列名的 list 作为参数。
+    inplace：如果设置 True，将计算得到的值直接覆盖之前的值并返回 None，修改的是源数据。
 
+我们可以通过 isnull() 判断各个单元格是否为空。
+''')
+df = pd.read_csv('file\\property-data.csv')
 print(df.to_string())
+missing_values = ["n/a", "na", "--"]
+df = pd.read_csv('file\\property-data.csv', na_values = missing_values)
 
+print (df['NUM_BEDROOMS'])
+print (df['NUM_BEDROOMS'].isnull())
 print("============================================")
-print("to_string() 用于返回 DataFrame 类型的数据，我们也可以直接处理 JSON 字符串")
-data =[
-    {
-      "id": "A001",
-      "name": "菜鸟教程",
-      "url": "www.runoob.com",
-      "likes": 61
-    },
-    {
-      "id": "A002",
-      "name": "Google",
-      "url": "www.google.com",
-      "likes": 124
-    },
-    {
-      "id": "A003",
-      "name": "淘宝",
-      "url": "www.taobao.com",
-      "likes": 45
-    }
-]
-df = pd.DataFrame(data)
-print(df)
+print("我们也可以移除指定列有空值的行：")
+df = pd.read_csv('file\\property-data.csv')
+df.dropna(subset=['ST_NUM'], inplace = True)
+print(df.to_string())
 print("============================================")
-print("JSON 对象与 Python 字典具有相同的格式，所以我们可以直接将 Python 字典转化为 DataFrame 数据：")
-# 字典格式的 JSON
-s = {
-    "col1":{"row1":1,"row2":2,"row3":3},
-    "col2":{"row1":"x","row2":"y","row3":"z"}
+print(''' 
+如果我们要清洗重复数据，可以使用 duplicated() 和 drop_duplicates() 方法。
+如果对应的数据是重复的，duplicated() 会返回 True，否则返回 False。''')
+person = {
+  "name": ['Google', 'Runoob', 'Runoob', 'Taobao'],
+  "age": [50, 40, 40, 23]
 }
+df = pd.DataFrame(person)
 
-# 读取 JSON 转为 DataFrame
-df = pd.DataFrame(s)
-print(df)
-print("============================================")
-print("从 URL 中读取 JSON 数据：")
-URL = 'https://static.runoob.com/download/sites.json'
-df = pd.read_json(URL)
-print(df)
-print("============================================")
-print("假设有一组内嵌的 JSON 数据文件 nested_list.json ：")
-df = pd.read_json('file\\nest_list.json')
-
-print(df)
-print("============================================")
-print("这时我们就需要使用到 json_normalize() 方法将内嵌的数据完整的解析出来")
-# 使用 Python JSON 模块载入数据
-with open('file\\nest_list.json','r') as f:
-    data = json.loads(f.read())
-
-# 展平数据
-df_nested_list = pd.json_normalize(data, record_path =['students'])
-print(df_nested_list)
-
-# 展平数据
-df_nested_list = pd.json_normalize(
-    data,
-    record_path =['students'],
-    meta=['school_name', 'class']
-)
-print(df_nested_list)
-print("============================================")
-print("我们需要使用到 glom 模块来处理数据套嵌，glom 模块允许我们使用 . 来访问内嵌对象的属性。")
-df = pd.read_json('file\\nest_deep.json')
-
-data = df['students'].apply(lambda row: glom(row, 'grade.math'))
-print(data)
-print("============================================")
+print(df.duplicated())
+print(df.count())
+# print(df.mean())
+print("========== ==================================")
